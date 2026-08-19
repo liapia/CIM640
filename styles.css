@@ -59,7 +59,7 @@ body.is-off .logotype {
 
 .tagline {
   margin: 1.35rem 0 0;
-  max-width: 22rem;
+  max-width: 26rem;
   font-size: clamp(0.98rem, 2.6vw, 1.2rem);
   font-weight: 400;
   letter-spacing: -0.015em;
@@ -91,7 +91,7 @@ body.is-settled .status {
 @media (max-width: 720px) {
   .tagline {
     margin-top: 1.1rem;
-    max-width: 18.5rem;
+    max-width: 20.5rem;
     font-size: 0.98rem;
   }
 
