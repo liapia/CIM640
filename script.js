@@ -45,7 +45,7 @@ function fitLogotype() {
     "font-family:Switzer,system-ui,sans-serif",
     "font-weight:400",
     "font-size:100px",
-    "letter-spacing:-0.03em",
+    "letter-spacing:-0.045em",
     "line-height:0.85",
   ].join(";");
   document.body.appendChild(probe);
@@ -57,13 +57,13 @@ function fitLogotype() {
   if (widthAt100 > 0) {
     logotype.style.setProperty(
       "--logotype-size",
-      `${(available / widthAt100) * 100}px`
+      `${(available / widthAt100) * 60}px`
     );
   }
 }
 
 function fitTagline() {
-  const maxPx = window.innerWidth <= 720 ? 14 : 17;
+  const maxPx = window.innerWidth <= 720 ? 8.4 : 10.2;
   const inset = Math.max(window.innerWidth * 0.06, 20);
   const available = Math.max(window.innerWidth - inset * 2, 80);
 
