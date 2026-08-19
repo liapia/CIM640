@@ -25,16 +25,21 @@ body {
 .logotype {
   position: fixed;
   left: 50%;
-  bottom: 50%;
+  top: 50%;
   margin: 0;
-  transform: translate(-50%, 50%);
-  font-size: clamp(4rem, 14vw, 12rem);
+  transform: translate(-50%, -50%);
+  font-family: "Clash Display", system-ui, sans-serif;
+  font-size: var(
+    --logotype-size,
+    min(calc((100vw - 8vw) / 4.6), 28vh)
+  );
   font-weight: 400;
   font-kerning: normal;
   font-feature-settings: "kern" 1;
   letter-spacing: -0.03em;
   line-height: 0.85;
   white-space: nowrap;
+  text-align: center;
   opacity: 1;
   pointer-events: none;
 }
@@ -48,28 +53,10 @@ body.is-invert {
   color: #0a0a0a;
 }
 
-body.is-settled .logotype {
-  left: max(4vw, env(safe-area-inset-left, 0px) + 0.75rem);
-  bottom: 0.6vh;
-  transform: none;
-  font-size: var(
-    --logotype-size,
-    min(calc((100vw - 8vw - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)) / 4.6), 36vh)
-  );
-  letter-spacing: -0.03em;
-  opacity: 1;
-  transition:
-    left 1.15s cubic-bezier(0.22, 1, 0.36, 1),
-    bottom 1.15s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 1.15s cubic-bezier(0.22, 1, 0.36, 1),
-    font-size 1.15s cubic-bezier(0.22, 1, 0.36, 1),
-    letter-spacing 1.15s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
 .status {
   position: fixed;
-  top: 2.4rem;
-  right: 2.6rem;
+  top: max(1.5rem, env(safe-area-inset-top, 0px) + 1.2rem);
+  right: max(1.4rem, env(safe-area-inset-right, 0px) + 1.2rem);
   font-size: 0.72rem;
   font-weight: 400;
   letter-spacing: 0.22em;
@@ -81,32 +68,19 @@ body.is-settled .logotype {
 
 body.is-settled .status {
   opacity: 1;
-  transition: opacity 0.8s ease 0.55s;
+  transition: opacity 0.8s ease 0.2s;
 }
 
 @media (max-width: 720px) {
   .status {
-    top: 1.5rem;
-    right: 1.4rem;
     font-size: 0.64rem;
-  }
-
-  body.is-settled .logotype {
-    left: max(4vw, env(safe-area-inset-left, 0px) + 0.75rem);
-    bottom: calc(2.8vh + env(safe-area-inset-bottom, 0px));
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .logotype,
   .status,
-  body.is-settled .logotype,
   body.is-settled .status {
     transition: none;
-  }
-
-  body.is-settled .logotype {
-    opacity: 1;
   }
 
   body.is-settled .status {

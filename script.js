@@ -4,10 +4,20 @@ const prefersReducedMotion = window.matchMedia(
   "(prefers-reduced-motion: reduce)"
 ).matches;
 
-let skipped = false;
+const faces = [
+  "Clash Display",
+  "Boska",
+  "Satoshi",
+  "Cabinet Grotesk",
+  "Switzer",
+];
+
+const finalFace = "Switzer";
 const logotype = document.querySelector(".logotype");
 
-function fittedFontSize() {
+let skipped = false;
+
+function fittedFontSize(family) {
   const probe = document.createElement("span");
   probe.textContent = logotype.textContent;
   probe.style.cssText = [
@@ -17,7 +27,7 @@ function fittedFontSize() {
     "visibility:hidden",
     "pointer-events:none",
     "white-space:nowrap",
-    "font-family:Switzer,system-ui,sans-serif",
+    `font-family:${family},system-ui,sans-serif`,
     "font-weight:400",
     "font-size:100px",
     "letter-spacing:-0.03em",
@@ -28,11 +38,8 @@ function fittedFontSize() {
   const widthAt100 = probe.getBoundingClientRect().width;
   probe.remove();
 
-  const inset = Math.max(window.innerWidth * 0.04, 12);
-  const available = Math.max(
-    window.innerWidth - inset * 2 - (window.visualViewport?.offsetLeft || 0),
-    80
-  );
+  const inset = Math.max(window.innerWidth * 0.08, 24);
+  const available = Math.max(window.innerWidth - inset, 80);
 
   if (widthAt100 <= 0) {
     return null;
@@ -41,45 +48,61 @@ function fittedFontSize() {
   return (available / widthAt100) * 100;
 }
 
-function applyFittedSize() {
-  const size = fittedFontSize();
+function applyFittedSize(family) {
+  const size = fittedFontSize(family);
   if (size) {
     logotype.style.setProperty("--logotype-size", `${size}px`);
   }
 }
 
+async function setFace(family) {
+  if (document.fonts?.load) {
+    await Promise.race([
+      document.fonts.load(`400 80px "${family}"`),
+      wait(400),
+    ]);
+  }
+
+  logotype.style.fontFamily = `"${family}", system-ui, sans-serif`;
+  applyFittedSize(family);
+}
+
 function settle() {
   skipped = true;
-  applyFittedSize();
   document.body.classList.remove("is-intro", "is-off", "is-invert");
   document.body.classList.add("is-settled");
+  setFace(finalFace);
 }
 
 async function playIntro() {
   const body = document.body;
 
-  await wait(520);
+  await setFace(faces[0]);
+  await wait(420);
   if (skipped) return;
-  body.classList.add("is-off");
-  await wait(140);
-  if (skipped) return;
-  body.classList.remove("is-off");
 
-  await wait(220);
-  if (skipped) return;
-  body.classList.add("is-off");
-  await wait(120);
-  if (skipped) return;
-  body.classList.remove("is-off");
+  for (let i = 1; i < faces.length; i += 1) {
+    body.classList.add("is-off");
+    await wait(90);
+    if (skipped) return;
 
-  await wait(260);
-  if (skipped) return;
-  body.classList.add("is-invert");
-  await wait(200);
-  if (skipped) return;
-  body.classList.remove("is-invert");
+    await setFace(faces[i]);
 
-  await wait(720);
+    const isLast = i === faces.length - 1;
+    if (isLast) {
+      body.classList.add("is-invert");
+    }
+
+    body.classList.remove("is-off");
+    await wait(isLast ? 280 : 320);
+    if (skipped) return;
+
+    if (isLast) {
+      body.classList.remove("is-invert");
+    }
+  }
+
+  await wait(640);
   if (skipped) return;
   settle();
 }
@@ -101,15 +124,15 @@ document.addEventListener(
 );
 
 window.addEventListener("resize", () => {
-  if (document.body.classList.contains("is-settled")) {
-    applyFittedSize();
-  }
+  const family =
+    logotype.style.fontFamily.replace(/["']/g, "").split(",")[0] || finalFace;
+  applyFittedSize(family);
 });
 
 window.visualViewport?.addEventListener("resize", () => {
-  if (document.body.classList.contains("is-settled")) {
-    applyFittedSize();
-  }
+  const family =
+    logotype.style.fontFamily.replace(/["']/g, "").split(",")[0] || finalFace;
+  applyFittedSize(family);
 });
 
 async function start() {
@@ -119,7 +142,7 @@ async function start() {
   }
 
   if (document.fonts && document.fonts.ready) {
-    await Promise.race([document.fonts.ready, wait(1500)]);
+    await Promise.race([document.fonts.ready, wait(1800)]);
   }
 
   if (!skipped) {
