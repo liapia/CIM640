@@ -26,8 +26,13 @@ function rand(min, max) {
   return min + Math.random() * (max - min);
 }
 
-function pick(list) {
-  return list[Math.floor(Math.random() * list.length)];
+function shuffle(list) {
+  const next = [...list];
+  for (let i = next.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [next[i], next[j]] = [next[j], next[i]];
+  }
+  return next;
 }
 
 function fitLogotype() {
@@ -69,32 +74,55 @@ function fitTagline() {
   }
 }
 
+function landingSpot(index, mobile) {
+  const band = index % 4;
+  if (band === 0) {
+    return {
+      x: Math.random() < 0.5 ? rand(5, 26) : rand(74, 95),
+      y: rand(3, 18),
+    };
+  }
+  if (band === 1) {
+    return { x: rand(3, mobile ? 20 : 22), y: rand(22, 72) };
+  }
+  if (band === 2) {
+    return { x: rand(mobile ? 80 : 78, 97), y: rand(22, 72) };
+  }
+  return {
+    x: Math.random() < 0.5 ? rand(6, 30) : rand(70, 94),
+    y: rand(mobile ? 72 : 74, 90),
+  };
+}
+
 function spawnCutouts() {
   sky.replaceChildren();
   const mobile = window.innerWidth <= 720;
-  const count = mobile ? 11 : 18;
+  const extras = mobile ? 1 : 7;
+  const pack = [
+    ...shuffle(products),
+    ...shuffle(products).slice(0, extras),
+  ];
 
-  for (let i = 0; i < count; i += 1) {
+  pack.forEach((src, index) => {
     const img = document.createElement("img");
     img.className = "cutout";
-    img.src = pick(products);
+    img.src = src;
     img.alt = "";
 
-    let x = rand(8, 92);
-    let y = rand(10, 78);
-    if (x > 28 && x < 72 && y > 32 && y < 62) {
-      x = x < 50 ? rand(6, 26) : rand(74, 94);
-    }
+    const spot = landingSpot(index, mobile);
 
-    img.style.setProperty("--x", `${x}vw`);
-    img.style.setProperty("--y", `${y}vh`);
-    img.style.setProperty("--w", `${rand(mobile ? 46 : 58, mobile ? 92 : 128)}px`);
-    img.style.setProperty("--r0", `${rand(-38, 38)}deg`);
-    img.style.setProperty("--r1", `${rand(-26, 26)}deg`);
-    img.style.setProperty("--delay", `${rand(0, 1.8)}s`);
-    img.style.setProperty("--dur", `${rand(2.6, 4.8)}s`);
+    img.style.setProperty("--x", `${spot.x}vw`);
+    img.style.setProperty("--y", `${spot.y}vh`);
+    img.style.setProperty(
+      "--w",
+      `${rand(mobile ? 52 : 64, mobile ? 98 : 140)}px`
+    );
+    img.style.setProperty("--r0", `${rand(-48, 48)}deg`);
+    img.style.setProperty("--r1", `${rand(-28, 28)}deg`);
+    img.style.setProperty("--delay", `${(index * 0.09 + rand(0, 0.35)).toFixed(2)}s`);
+    img.style.setProperty("--dur", `${rand(1.8, 3.1).toFixed(2)}s`);
     sky.appendChild(img);
-  }
+  });
 }
 
 function fit() {
@@ -116,14 +144,12 @@ async function play() {
   }
 
   document.body.classList.add("is-logo");
-  await wait(900);
-  document.body.classList.add("is-tagline");
   await wait(700);
+  document.body.classList.add("is-tagline");
+  await wait(550);
   document.body.classList.add("is-ready");
 }
 
-window.addEventListener("resize", () => {
-  fit();
-});
+window.addEventListener("resize", fit);
 
 play();
