@@ -63,7 +63,7 @@ function fitLogotype() {
 }
 
 function fitTagline() {
-  const maxPx = window.innerWidth <= 720 ? 8.4 : 10.2;
+  const maxPx = window.innerWidth <= 720 ? 11.5 : 14;
   const inset = Math.max(window.innerWidth * 0.06, 20);
   const available = Math.max(window.innerWidth - inset * 2, 80);
 
