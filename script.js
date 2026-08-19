@@ -8,22 +8,21 @@ const faces = [
   "Clash Display",
   "Boska",
   "Panchang",
-  "Satoshi",
   "Zodiak",
   "Melodrama",
   "Cabinet Grotesk",
   "Gambarino",
   "General Sans",
   "Switzer",
+  "Satoshi",
 ];
 
-const finalFace = "Switzer";
+const finalFace = "Satoshi";
 const logotype = document.querySelector(".logotype");
 const tagline = document.querySelector(".tagline");
 const fadeMs = prefersReducedMotion ? 0 : 220;
 
 let skipped = false;
-let rotating = false;
 let currentFace = faces[0];
 
 function fittedFontSize(family) {
@@ -105,7 +104,6 @@ function settle() {
   document.body.classList.add("is-settled");
   setFace(finalFace);
   applyTaglineSize();
-  startRotation();
 }
 
 async function playIntro() {
@@ -120,40 +118,9 @@ async function playIntro() {
     if (skipped) return;
   }
 
-  await wait(160);
+  await wait(280);
   if (skipped) return;
   settle();
-}
-
-function startRotation() {
-  if (rotating || prefersReducedMotion) {
-    return;
-  }
-
-  rotating = true;
-
-  const loop = async () => {
-    let index = faces.indexOf(finalFace);
-    if (index < 0) {
-      index = 0;
-    }
-
-    while (rotating) {
-      await wait(1400);
-      if (!rotating) return;
-
-      index = (index + 1) % faces.length;
-      document.body.classList.add("is-off");
-      await wait(fadeMs);
-      if (!rotating) return;
-
-      await setFace(faces[index]);
-      document.body.classList.remove("is-off");
-      await wait(fadeMs);
-    }
-  };
-
-  loop();
 }
 
 function skipIntro() {
