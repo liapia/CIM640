@@ -19,7 +19,8 @@ const faces = [
 
 const finalFace = "Switzer";
 const logotype = document.querySelector(".logotype");
-const fadeMs = prefersReducedMotion ? 0 : 550;
+const tagline = document.querySelector(".tagline");
+const fadeMs = prefersReducedMotion ? 0 : 220;
 
 let skipped = false;
 let rotating = false;
@@ -56,6 +57,18 @@ function fittedFontSize(family) {
   return (available / widthAt100) * 100;
 }
 
+function applyTaglineSize() {
+  const maxPx = window.innerWidth <= 720 ? 14 : 17;
+  const inset = Math.max(window.innerWidth * 0.06, 20);
+  const available = Math.max(window.innerWidth - inset * 2, 80);
+
+  tagline.style.fontSize = `${maxPx}px`;
+  const width = tagline.scrollWidth;
+  if (width > available) {
+    tagline.style.fontSize = `${maxPx * (available / width)}px`;
+  }
+}
+
 function applyFittedSize(family) {
   const size = fittedFontSize(family);
   if (size) {
@@ -67,7 +80,7 @@ async function setFace(family) {
   if (document.fonts?.load) {
     await Promise.race([
       document.fonts.load(`400 80px "${family}"`),
-      wait(400),
+      wait(180),
     ]);
   }
 
@@ -91,22 +104,23 @@ function settle() {
   document.body.classList.remove("is-intro", "is-off");
   document.body.classList.add("is-settled");
   setFace(finalFace);
+  applyTaglineSize();
   startRotation();
 }
 
 async function playIntro() {
   await setFace(faces[0]);
-  await wait(700);
+  await wait(280);
   if (skipped) return;
 
   for (let i = 1; i < faces.length; i += 1) {
     await fadeToFace(faces[i]);
     if (skipped) return;
-    await wait(280);
+    await wait(90);
     if (skipped) return;
   }
 
-  await wait(400);
+  await wait(160);
   if (skipped) return;
   settle();
 }
@@ -125,7 +139,7 @@ function startRotation() {
     }
 
     while (rotating) {
-      await wait(2400);
+      await wait(1400);
       if (!rotating) return;
 
       index = (index + 1) % faces.length;
@@ -160,10 +174,12 @@ document.addEventListener(
 
 window.addEventListener("resize", () => {
   applyFittedSize(currentFace);
+  applyTaglineSize();
 });
 
 window.visualViewport?.addEventListener("resize", () => {
   applyFittedSize(currentFace);
+  applyTaglineSize();
 });
 
 async function start() {
