@@ -4,31 +4,8 @@ const prefersReducedMotion = window.matchMedia(
   "(prefers-reduced-motion: reduce)"
 ).matches;
 
-const products = [
-  "products/product-01.webp",
-  "products/product-02.webp",
-  "products/product-03.webp",
-  "products/product-05.webp",
-  "products/product-06.webp",
-  "products/product-07.webp",
-  "products/product-08.webp",
-  "products/product-09.webp",
-  "products/product-10.webp",
-  "products/product-11.webp",
-  "products/product-12.webp",
-];
-
 const logotype = document.querySelector(".logotype");
 const tagline = document.querySelector(".tagline");
-const sky = document.querySelector("#sky");
-
-function rand(min, max) {
-  return min + Math.random() * (max - min);
-}
-
-function pick(list) {
-  return list[Math.floor(Math.random() * list.length)];
-}
 
 function fitLogotype() {
   const probe = document.createElement("span");
@@ -37,7 +14,7 @@ function fitLogotype() {
     "position:absolute",
     "visibility:hidden",
     "white-space:nowrap",
-    "font-family:Switzer,system-ui,sans-serif",
+    "font-family:Satoshi,system-ui,sans-serif",
     "font-weight:400",
     "font-size:100px",
     "letter-spacing:-0.03em",
@@ -69,41 +46,12 @@ function fitTagline() {
   }
 }
 
-function spawnCutouts() {
-  sky.replaceChildren();
-  const mobile = window.innerWidth <= 720;
-  const count = mobile ? 11 : 18;
-
-  for (let i = 0; i < count; i += 1) {
-    const img = document.createElement("img");
-    img.className = "cutout";
-    img.src = pick(products);
-    img.alt = "";
-
-    let x = rand(8, 92);
-    let y = rand(10, 78);
-    if (x > 28 && x < 72 && y > 32 && y < 62) {
-      x = x < 50 ? rand(6, 26) : rand(74, 94);
-    }
-
-    img.style.setProperty("--x", `${x}vw`);
-    img.style.setProperty("--y", `${y}vh`);
-    img.style.setProperty("--w", `${rand(mobile ? 46 : 58, mobile ? 92 : 128)}px`);
-    img.style.setProperty("--r0", `${rand(-38, 38)}deg`);
-    img.style.setProperty("--r1", `${rand(-26, 26)}deg`);
-    img.style.setProperty("--delay", `${rand(0, 1.8)}s`);
-    img.style.setProperty("--dur", `${rand(2.6, 4.8)}s`);
-    sky.appendChild(img);
-  }
-}
-
 function fit() {
   fitLogotype();
   fitTagline();
 }
 
 async function play() {
-  spawnCutouts();
   fit();
 
   if (prefersReducedMotion) {
@@ -118,12 +66,11 @@ async function play() {
   document.body.classList.add("is-logo");
   await wait(900);
   document.body.classList.add("is-tagline");
-  await wait(700);
+  await wait(800);
   document.body.classList.add("is-ready");
 }
 
-window.addEventListener("resize", () => {
-  fit();
-});
+window.addEventListener("resize", fit);
+window.visualViewport?.addEventListener("resize", fit);
 
 play();
