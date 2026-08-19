@@ -58,7 +58,7 @@ body.is-off .logotype {
 }
 
 .tagline {
-  margin: 1.2rem 0 0;
+  margin: 2.15rem 0 0;
   font-family: "Satoshi", system-ui, sans-serif;
   font-size: 1.0625rem;
   font-weight: 400;
@@ -96,7 +96,7 @@ body.is-settled .status {
 
 @media (max-width: 720px) {
   .tagline {
-    margin-top: 0.95rem;
+    margin-top: 1.65rem;
     font-size: 0.875rem;
   }
 
