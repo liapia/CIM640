@@ -79,7 +79,7 @@ async function setFace(family) {
 async function fadeToFace(family) {
   document.body.classList.add("is-off");
   await wait(fadeMs);
-  if (skipped && !rotating) return;
+  if (skipped) return;
 
   await setFace(family);
   document.body.classList.remove("is-off");

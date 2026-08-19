@@ -30,7 +30,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: max-content;
+  width: min(36rem, calc(100vw - 8vw));
   max-width: calc(100vw - 8vw);
 }
 
@@ -57,36 +57,60 @@ body.is-off .logotype {
   opacity: 0;
 }
 
+.tagline {
+  margin: 1.35rem 0 0;
+  max-width: 22rem;
+  font-size: clamp(0.98rem, 2.6vw, 1.2rem);
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  line-height: 1.4;
+  text-align: center;
+  color: rgba(242, 239, 233, 0.72);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.9s ease 0.12s;
+}
+
 .status {
-  margin: 1.15rem 0 0;
+  margin: 0.9rem 0 0;
   font-size: 0.72rem;
   font-weight: 400;
   letter-spacing: 0.16em;
   text-transform: lowercase;
-  color: rgba(242, 239, 233, 0.56);
+  color: rgba(242, 239, 233, 0.45);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.8s ease;
+  transition: opacity 0.9s ease 0.28s;
 }
 
+body.is-settled .tagline,
 body.is-settled .status {
   opacity: 1;
 }
 
 @media (max-width: 720px) {
+  .tagline {
+    margin-top: 1.1rem;
+    max-width: 18.5rem;
+    font-size: 0.98rem;
+  }
+
   .status {
-    margin-top: 0.95rem;
+    margin-top: 0.8rem;
     font-size: 0.64rem;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .logotype,
+  .tagline,
   .status,
+  body.is-settled .tagline,
   body.is-settled .status {
     transition: none;
   }
 
+  body.is-settled .tagline,
   body.is-settled .status {
     opacity: 1;
   }
