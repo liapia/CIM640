@@ -4,42 +4,20 @@ const prefersReducedMotion = window.matchMedia(
   "(prefers-reduced-motion: reduce)"
 ).matches;
 
-const faces = [
-  "Clash Display",
-  "Boska",
-  "Panchang",
-  "Zodiak",
-  "Melodrama",
-  "Cabinet Grotesk",
-  "Gambarino",
-  "General Sans",
-  "Switzer",
-  "Satoshi",
-];
-
-const finalFace = "Satoshi";
 const logotype = document.querySelector(".logotype");
 const tagline = document.querySelector(".tagline");
-const fadeMs = prefersReducedMotion ? 0 : 220;
 
-let skipped = false;
-let currentFace = faces[0];
-
-function fittedFontSize(family) {
+function fitLogotype() {
   const probe = document.createElement("span");
   probe.textContent = logotype.textContent;
   probe.style.cssText = [
     "position:absolute",
-    "left:0",
-    "top:0",
     "visibility:hidden",
-    "pointer-events:none",
     "white-space:nowrap",
-    `font-family:${family},system-ui,sans-serif`,
+    "font-family:Satoshi,system-ui,sans-serif",
     "font-weight:400",
     "font-size:100px",
     "letter-spacing:-0.03em",
-    "font-kerning:normal",
     "line-height:0.85",
   ].join(";");
   document.body.appendChild(probe);
@@ -48,15 +26,15 @@ function fittedFontSize(family) {
 
   const inset = Math.max(window.innerWidth * 0.08, 24);
   const available = Math.max(window.innerWidth - inset, 80);
-
-  if (widthAt100 <= 0) {
-    return null;
+  if (widthAt100 > 0) {
+    logotype.style.setProperty(
+      "--logotype-size",
+      `${(available / widthAt100) * 100}px`
+    );
   }
-
-  return (available / widthAt100) * 100;
 }
 
-function applyTaglineSize() {
+function fitTagline() {
   const maxPx = window.innerWidth <= 720 ? 14 : 17;
   const inset = Math.max(window.innerWidth * 0.06, 20);
   const available = Math.max(window.innerWidth - inset * 2, 80);
@@ -68,100 +46,31 @@ function applyTaglineSize() {
   }
 }
 
-function applyFittedSize(family) {
-  const size = fittedFontSize(family);
-  if (size) {
-    logotype.style.setProperty("--logotype-size", `${size}px`);
-  }
+function fit() {
+  fitLogotype();
+  fitTagline();
 }
 
-async function setFace(family) {
-  if (document.fonts?.load) {
-    await Promise.race([
-      document.fonts.load(`400 80px "${family}"`),
-      wait(180),
-    ]);
-  }
+async function play() {
+  fit();
 
-  currentFace = family;
-  logotype.style.fontFamily = `"${family}", system-ui, sans-serif`;
-  applyFittedSize(family);
-}
-
-async function fadeToFace(family) {
-  document.body.classList.add("is-off");
-  await wait(fadeMs);
-  if (skipped) return;
-
-  await setFace(family);
-  document.body.classList.remove("is-off");
-  await wait(fadeMs);
-}
-
-function settle() {
-  skipped = true;
-  document.body.classList.remove("is-intro", "is-off");
-  document.body.classList.add("is-settled");
-  setFace(finalFace);
-  applyTaglineSize();
-}
-
-async function playIntro() {
-  await setFace(faces[0]);
-  await wait(280);
-  if (skipped) return;
-
-  for (let i = 1; i < faces.length; i += 1) {
-    await fadeToFace(faces[i]);
-    if (skipped) return;
-    await wait(90);
-    if (skipped) return;
-  }
-
-  await wait(280);
-  if (skipped) return;
-  settle();
-}
-
-function skipIntro() {
-  settle();
-}
-
-document.addEventListener("click", skipIntro, { once: true });
-document.addEventListener(
-  "keydown",
-  (event) => {
-    if (event.key === "Escape" || event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      skipIntro();
-    }
-  },
-  { once: true }
-);
-
-window.addEventListener("resize", () => {
-  applyFittedSize(currentFace);
-  applyTaglineSize();
-});
-
-window.visualViewport?.addEventListener("resize", () => {
-  applyFittedSize(currentFace);
-  applyTaglineSize();
-});
-
-async function start() {
   if (prefersReducedMotion) {
-    settle();
+    document.body.classList.add("is-ready");
     return;
   }
 
-  if (document.fonts && document.fonts.ready) {
-    await Promise.race([document.fonts.ready, wait(1800)]);
+  if (document.fonts?.ready) {
+    await Promise.race([document.fonts.ready, wait(1500)]);
   }
 
-  if (!skipped) {
-    playIntro();
-  }
+  document.body.classList.add("is-logo");
+  await wait(900);
+  document.body.classList.add("is-tagline");
+  await wait(800);
+  document.body.classList.add("is-ready");
 }
 
-start();
+window.addEventListener("resize", fit);
+window.visualViewport?.addEventListener("resize", fit);
+
+play();

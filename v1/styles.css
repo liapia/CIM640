@@ -13,7 +13,7 @@ body {
 body {
   background: #0a0a0a;
   color: #f2efe9;
-  font-family: "Satoshi", system-ui, sans-serif;
+  font-family: "Switzer", system-ui, sans-serif;
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -31,10 +31,12 @@ body {
   flex-direction: column;
   align-items: center;
   width: min(92vw, 56rem);
+  max-width: calc(100vw - 8vw);
 }
 
 .logotype {
   margin: 0;
+  font-family: "Clash Display", system-ui, sans-serif;
   font-size: var(
     --logotype-size,
     min(calc((100vw - 8vw) / 4.8), 28vh)
@@ -46,13 +48,18 @@ body {
   line-height: 0.85;
   white-space: nowrap;
   text-align: center;
-  opacity: 0;
+  opacity: 1;
   pointer-events: none;
-  transition: opacity 0.9s ease;
+  transition: opacity 0.22s ease;
+}
+
+body.is-off .logotype {
+  opacity: 0;
 }
 
 .tagline {
   margin: 2.15rem 0 0;
+  font-family: "Satoshi", system-ui, sans-serif;
   font-size: 1.0625rem;
   font-weight: 400;
   letter-spacing: -0.01em;
@@ -62,19 +69,7 @@ body {
   color: rgba(242, 239, 233, 0.72);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 1s ease;
-}
-
-.categories {
-  margin: 1.35rem 0 0;
-  font-size: 0.72rem;
-  font-weight: 400;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(242, 239, 233, 0.38);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 1s ease;
+  transition: opacity 1s ease 0.2s;
 }
 
 .status {
@@ -83,6 +78,7 @@ body {
   bottom: max(1.5rem, env(safe-area-inset-bottom, 0px) + 1rem);
   transform: translateX(-50%);
   margin: 0;
+  font-family: "Satoshi", system-ui, sans-serif;
   font-size: 0.72rem;
   font-weight: 400;
   letter-spacing: 0.16em;
@@ -90,16 +86,11 @@ body {
   color: rgba(242, 239, 233, 0.45);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.9s ease;
+  transition: opacity 0.8s ease 0.45s;
 }
 
-body.is-logo .logotype,
-body.is-tagline .logotype,
-body.is-tagline .tagline,
-body.is-ready .logotype,
-body.is-ready .tagline,
-body.is-ready .categories,
-body.is-ready .status {
+body.is-settled .tagline,
+body.is-settled .status {
   opacity: 1;
 }
 
@@ -107,11 +98,6 @@ body.is-ready .status {
   .tagline {
     margin-top: 1.65rem;
     font-size: 0.875rem;
-  }
-
-  .categories {
-    font-size: 0.62rem;
-    letter-spacing: 0.14em;
   }
 
   .status {
@@ -122,9 +108,14 @@ body.is-ready .status {
 @media (prefers-reduced-motion: reduce) {
   .logotype,
   .tagline,
-  .categories,
-  .status {
+  .status,
+  body.is-settled .tagline,
+  body.is-settled .status {
     transition: none;
+  }
+
+  body.is-settled .tagline,
+  body.is-settled .status {
     opacity: 1;
   }
 }
