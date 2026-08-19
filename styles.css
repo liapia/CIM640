@@ -49,10 +49,13 @@ body.is-invert {
 }
 
 body.is-settled .logotype {
-  left: 2.4vw;
+  left: max(4vw, env(safe-area-inset-left, 0px) + 0.75rem);
   bottom: 0.6vh;
   transform: none;
-  font-size: clamp(5rem, min(24vw, 38vh), 30rem);
+  font-size: var(
+    --logotype-size,
+    min(calc((100vw - 8vw - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)) / 4.6), 36vh)
+  );
   letter-spacing: -0.03em;
   opacity: 1;
   transition:
@@ -89,9 +92,8 @@ body.is-settled .status {
   }
 
   body.is-settled .logotype {
-    left: 4vw;
+    left: max(4vw, env(safe-area-inset-left, 0px) + 0.75rem);
     bottom: calc(2.8vh + env(safe-area-inset-bottom, 0px));
-    font-size: clamp(4.2rem, 23vw, 10rem);
   }
 }
 

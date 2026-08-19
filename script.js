@@ -5,9 +5,52 @@ const prefersReducedMotion = window.matchMedia(
 ).matches;
 
 let skipped = false;
+const logotype = document.querySelector(".logotype");
+
+function fittedFontSize() {
+  const probe = document.createElement("span");
+  probe.textContent = logotype.textContent;
+  probe.style.cssText = [
+    "position:absolute",
+    "left:0",
+    "top:0",
+    "visibility:hidden",
+    "pointer-events:none",
+    "white-space:nowrap",
+    "font-family:Switzer,system-ui,sans-serif",
+    "font-weight:400",
+    "font-size:100px",
+    "letter-spacing:-0.03em",
+    "font-kerning:normal",
+    "line-height:0.85",
+  ].join(";");
+  document.body.appendChild(probe);
+  const widthAt100 = probe.getBoundingClientRect().width;
+  probe.remove();
+
+  const inset = Math.max(window.innerWidth * 0.04, 12);
+  const available = Math.max(
+    window.innerWidth - inset * 2 - (window.visualViewport?.offsetLeft || 0),
+    80
+  );
+
+  if (widthAt100 <= 0) {
+    return null;
+  }
+
+  return (available / widthAt100) * 100;
+}
+
+function applyFittedSize() {
+  const size = fittedFontSize();
+  if (size) {
+    logotype.style.setProperty("--logotype-size", `${size}px`);
+  }
+}
 
 function settle() {
   skipped = true;
+  applyFittedSize();
   document.body.classList.remove("is-intro", "is-off", "is-invert");
   document.body.classList.add("is-settled");
 }
@@ -56,6 +99,18 @@ document.addEventListener(
   },
   { once: true }
 );
+
+window.addEventListener("resize", () => {
+  if (document.body.classList.contains("is-settled")) {
+    applyFittedSize();
+  }
+});
+
+window.visualViewport?.addEventListener("resize", () => {
+  if (document.body.classList.contains("is-settled")) {
+    applyFittedSize();
+  }
+});
 
 async function start() {
   if (prefersReducedMotion) {
