@@ -13,7 +13,7 @@ body {
 body {
   background: #0a0a0a;
   color: #f2efe9;
-  font-family: "Satoshi", system-ui, sans-serif;
+  font-family: "Switzer", system-ui, sans-serif;
   font-weight: 500;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -28,9 +28,9 @@ body {
   bottom: 50%;
   margin: 0;
   transform: translate(-50%, 50%);
-  font-size: clamp(3.25rem, 10vw, 8.5rem);
+  font-size: clamp(4rem, 14vw, 12rem);
   font-weight: 500;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.06em;
   line-height: 0.85;
   white-space: nowrap;
   opacity: 1;
@@ -47,11 +47,11 @@ body.is-invert {
 }
 
 body.is-settled .logotype {
-  left: 3.2vw;
-  bottom: 2.2vh;
+  left: 2.4vw;
+  bottom: 0.6vh;
   transform: none;
-  font-size: clamp(3.6rem, min(18vw, 26vh), 22rem);
-  letter-spacing: -0.055em;
+  font-size: clamp(5rem, min(24vw, 38vh), 30rem);
+  letter-spacing: -0.07em;
   opacity: 1;
   transition:
     left 1.15s cubic-bezier(0.22, 1, 0.36, 1),
@@ -87,9 +87,9 @@ body.is-settled .status {
   }
 
   body.is-settled .logotype {
-    left: 5vw;
-    bottom: calc(5.5vh + env(safe-area-inset-bottom, 0px));
-    font-size: clamp(3.2rem, 17.5vw, 6.75rem);
+    left: 4vw;
+    bottom: calc(2.8vh + env(safe-area-inset-bottom, 0px));
+    font-size: clamp(4.2rem, 23vw, 10rem);
   }
 }
 
