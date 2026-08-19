@@ -7,8 +7,13 @@ const prefersReducedMotion = window.matchMedia(
 const faces = [
   "Clash Display",
   "Boska",
+  "Panchang",
   "Satoshi",
+  "Zodiak",
+  "Melodrama",
   "Cabinet Grotesk",
+  "Gambarino",
+  "General Sans",
   "Switzer",
 ];
 
@@ -16,6 +21,8 @@ const finalFace = "Switzer";
 const logotype = document.querySelector(".logotype");
 
 let skipped = false;
+let rotating = false;
+let currentFace = faces[0];
 
 function fittedFontSize(family) {
   const probe = document.createElement("span");
@@ -63,6 +70,7 @@ async function setFace(family) {
     ]);
   }
 
+  currentFace = family;
   logotype.style.fontFamily = `"${family}", system-ui, sans-serif`;
   applyFittedSize(family);
 }
@@ -72,18 +80,19 @@ function settle() {
   document.body.classList.remove("is-intro", "is-off", "is-invert");
   document.body.classList.add("is-settled");
   setFace(finalFace);
+  startRotation();
 }
 
 async function playIntro() {
   const body = document.body;
 
   await setFace(faces[0]);
-  await wait(420);
+  await wait(380);
   if (skipped) return;
 
   for (let i = 1; i < faces.length; i += 1) {
     body.classList.add("is-off");
-    await wait(90);
+    await wait(70);
     if (skipped) return;
 
     await setFace(faces[i]);
@@ -94,7 +103,7 @@ async function playIntro() {
     }
 
     body.classList.remove("is-off");
-    await wait(isLast ? 280 : 320);
+    await wait(isLast ? 260 : 240);
     if (skipped) return;
 
     if (isLast) {
@@ -102,9 +111,39 @@ async function playIntro() {
     }
   }
 
-  await wait(640);
+  await wait(500);
   if (skipped) return;
   settle();
+}
+
+function startRotation() {
+  if (rotating || prefersReducedMotion) {
+    return;
+  }
+
+  rotating = true;
+
+  const loop = async () => {
+    let index = faces.indexOf(finalFace);
+    if (index < 0) {
+      index = 0;
+    }
+
+    while (rotating) {
+      await wait(2200);
+      if (!rotating) return;
+
+      index = (index + 1) % faces.length;
+      document.body.classList.add("is-off");
+      await wait(70);
+      if (!rotating) return;
+
+      await setFace(faces[index]);
+      document.body.classList.remove("is-off");
+    }
+  };
+
+  loop();
 }
 
 function skipIntro() {
@@ -124,15 +163,11 @@ document.addEventListener(
 );
 
 window.addEventListener("resize", () => {
-  const family =
-    logotype.style.fontFamily.replace(/["']/g, "").split(",")[0] || finalFace;
-  applyFittedSize(family);
+  applyFittedSize(currentFace);
 });
 
 window.visualViewport?.addEventListener("resize", () => {
-  const family =
-    logotype.style.fontFamily.replace(/["']/g, "").split(",")[0] || finalFace;
-  applyFittedSize(family);
+  applyFittedSize(currentFace);
 });
 
 async function start() {
