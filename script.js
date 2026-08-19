@@ -19,6 +19,7 @@ const faces = [
 
 const finalFace = "Switzer";
 const logotype = document.querySelector(".logotype");
+const fadeMs = prefersReducedMotion ? 0 : 550;
 
 let skipped = false;
 let rotating = false;
@@ -75,43 +76,37 @@ async function setFace(family) {
   applyFittedSize(family);
 }
 
+async function fadeToFace(family) {
+  document.body.classList.add("is-off");
+  await wait(fadeMs);
+  if (skipped && !rotating) return;
+
+  await setFace(family);
+  document.body.classList.remove("is-off");
+  await wait(fadeMs);
+}
+
 function settle() {
   skipped = true;
-  document.body.classList.remove("is-intro", "is-off", "is-invert");
+  document.body.classList.remove("is-intro", "is-off");
   document.body.classList.add("is-settled");
   setFace(finalFace);
   startRotation();
 }
 
 async function playIntro() {
-  const body = document.body;
-
   await setFace(faces[0]);
-  await wait(380);
+  await wait(700);
   if (skipped) return;
 
   for (let i = 1; i < faces.length; i += 1) {
-    body.classList.add("is-off");
-    await wait(70);
+    await fadeToFace(faces[i]);
     if (skipped) return;
-
-    await setFace(faces[i]);
-
-    const isLast = i === faces.length - 1;
-    if (isLast) {
-      body.classList.add("is-invert");
-    }
-
-    body.classList.remove("is-off");
-    await wait(isLast ? 260 : 240);
+    await wait(280);
     if (skipped) return;
-
-    if (isLast) {
-      body.classList.remove("is-invert");
-    }
   }
 
-  await wait(500);
+  await wait(400);
   if (skipped) return;
   settle();
 }
@@ -130,16 +125,17 @@ function startRotation() {
     }
 
     while (rotating) {
-      await wait(2200);
+      await wait(2400);
       if (!rotating) return;
 
       index = (index + 1) % faces.length;
       document.body.classList.add("is-off");
-      await wait(70);
+      await wait(fadeMs);
       if (!rotating) return;
 
       await setFace(faces[index]);
       document.body.classList.remove("is-off");
+      await wait(fadeMs);
     }
   };
 
