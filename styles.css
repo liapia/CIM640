@@ -32,7 +32,7 @@ body {
   font-weight: 400;
   font-kerning: normal;
   font-feature-settings: "kern" 1;
-  letter-spacing: 0.04em;
+  letter-spacing: -0.03em;
   line-height: 0.85;
   white-space: nowrap;
   opacity: 1;
@@ -53,7 +53,7 @@ body.is-settled .logotype {
   bottom: 0.6vh;
   transform: none;
   font-size: clamp(5rem, min(24vw, 38vh), 30rem);
-  letter-spacing: 0.04em;
+  letter-spacing: -0.03em;
   opacity: 1;
   transition:
     left 1.15s cubic-bezier(0.22, 1, 0.36, 1),
