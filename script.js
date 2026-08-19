@@ -8,35 +8,34 @@ let skipped = false;
 
 function settle() {
   skipped = true;
-  document.body.classList.remove("is-intro", "is-flash", "is-hold", "is-invert");
+  document.body.classList.remove("is-intro", "is-off", "is-invert");
   document.body.classList.add("is-settled");
 }
 
 async function playIntro() {
   const body = document.body;
 
-  await wait(420);
+  await wait(520);
   if (skipped) return;
-  body.classList.add("is-flash");
-  await wait(160);
-  if (skipped) return;
-  body.classList.remove("is-flash");
-
-  await wait(240);
-  if (skipped) return;
-  body.classList.add("is-flash");
+  body.classList.add("is-off");
   await wait(140);
   if (skipped) return;
-  body.classList.remove("is-flash");
+  body.classList.remove("is-off");
 
-  await wait(280);
+  await wait(220);
   if (skipped) return;
-  body.classList.add("is-flash", "is-invert");
-  await wait(180);
+  body.classList.add("is-off");
+  await wait(120);
+  if (skipped) return;
+  body.classList.remove("is-off");
+
+  await wait(260);
+  if (skipped) return;
+  body.classList.add("is-invert");
+  await wait(200);
   if (skipped) return;
   body.classList.remove("is-invert");
 
-  body.classList.add("is-hold");
   await wait(720);
   if (skipped) return;
   settle();
@@ -65,10 +64,7 @@ async function start() {
   }
 
   if (document.fonts && document.fonts.ready) {
-    await Promise.race([
-      document.fonts.ready,
-      wait(1500),
-    ]);
+    await Promise.race([document.fonts.ready, wait(1500)]);
   }
 
   if (!skipped) {

@@ -33,13 +33,12 @@ body {
   letter-spacing: -0.05em;
   line-height: 0.85;
   white-space: nowrap;
-  opacity: 0;
+  opacity: 1;
   pointer-events: none;
 }
 
-body.is-flash .logotype,
-body.is-hold .logotype {
-  opacity: 1;
+body.is-off .logotype {
+  opacity: 0;
 }
 
 body.is-invert {
@@ -102,8 +101,7 @@ body.is-settled .status {
     transition: none;
   }
 
-  body.is-settled .logotype,
-  body.is-hold .logotype {
+  body.is-settled .logotype {
     opacity: 1;
   }
 
