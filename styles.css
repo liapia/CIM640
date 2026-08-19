@@ -93,7 +93,7 @@ body {
 .tagline {
   margin: calc(2.15rem + 45px) 0 0;
   font-family: "Satoshi", system-ui, sans-serif;
-  font-size: 0.64rem;
+  font-size: 0.9rem;
   font-weight: 400;
   letter-spacing: -0.015em;
   line-height: 1.2;
@@ -112,7 +112,7 @@ body {
   transform: translateX(-50%);
   margin: 0;
   font-family: "Satoshi", system-ui, sans-serif;
-  font-size: 23px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -134,11 +134,11 @@ body.is-ready .status {
 @media (max-width: 720px) {
   .tagline {
     margin-top: calc(1.65rem + 45px);
-    font-size: 0.525rem;
+    font-size: 0.72rem;
   }
 
   .status {
-    font-size: 23px;
+    font-size: 12px;
   }
 }
 
