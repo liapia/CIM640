@@ -103,6 +103,8 @@ function spawnCutouts() {
     ...shuffle(products).slice(0, extras),
   ];
 
+  let longestDropMs = 0;
+
   pack.forEach((src, index) => {
     const img = document.createElement("img");
     img.className = "cutout";
@@ -119,10 +121,15 @@ function spawnCutouts() {
     );
     img.style.setProperty("--r0", `${rand(-48, 48)}deg`);
     img.style.setProperty("--r1", `${rand(-28, 28)}deg`);
-    img.style.setProperty("--delay", `${(index * 0.09 + rand(0, 0.35)).toFixed(2)}s`);
-    img.style.setProperty("--dur", `${rand(1.8, 3.1).toFixed(2)}s`);
+    const delaySec = Number((index * 0.09 + rand(0, 0.35)).toFixed(2));
+    const durSec = Number(rand(1.8, 3.1).toFixed(2));
+    img.style.setProperty("--delay", `${delaySec}s`);
+    img.style.setProperty("--dur", `${durSec}s`);
+    longestDropMs = Math.max(longestDropMs, (delaySec + durSec) * 1000);
     sky.appendChild(img);
   });
+
+  return longestDropMs;
 }
 
 function fit() {
@@ -131,7 +138,7 @@ function fit() {
 }
 
 async function play() {
-  spawnCutouts();
+  const longestDropMs = spawnCutouts();
   fit();
 
   if (prefersReducedMotion) {
@@ -145,6 +152,8 @@ async function play() {
 
   document.body.classList.add("is-logo");
   await wait(700);
+  // Keep the catch phrase hidden until all cutouts have landed.
+  await wait(longestDropMs);
   document.body.classList.add("is-tagline");
   await wait(550);
   document.body.classList.add("is-ready");

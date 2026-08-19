@@ -91,7 +91,7 @@ body {
 }
 
 .tagline {
-  margin: 2.15rem 0 0;
+  margin: calc(2.15rem + 45px) 0 0;
   font-family: "Satoshi", system-ui, sans-serif;
   font-size: 0.64rem;
   font-weight: 400;
@@ -112,10 +112,10 @@ body {
   transform: translateX(-50%);
   margin: 0;
   font-family: "Satoshi", system-ui, sans-serif;
-  font-size: 0.44rem;
-  font-weight: 400;
-  letter-spacing: 0.16em;
-  text-transform: lowercase;
+  font-size: 23px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: rgba(17, 17, 17, 0.52);
   opacity: 0;
   pointer-events: none;
@@ -133,12 +133,12 @@ body.is-ready .status {
 
 @media (max-width: 720px) {
   .tagline {
-    margin-top: 1.65rem;
+    margin-top: calc(1.65rem + 45px);
     font-size: 0.525rem;
   }
 
   .status {
-    font-size: 0.375rem;
+    font-size: 23px;
   }
 }
 
